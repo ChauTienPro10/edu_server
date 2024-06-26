@@ -5,8 +5,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -83,8 +86,8 @@ public class UserControler {
 			List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
 			Optional<User> us = userRep.findByEmail(jsondta.get("username"));
 			
-			HttpSession session = request.getSession();
-			session.setAttribute("JWT_TOKEN", jwt);
+//			HttpSession session = request.getSession();
+//			session.setAttribute("JWT_TOKEN", jwt);
 			return new LoginResponse(jwt, authorities, authentication.getName(), us.get().getId());
 		} catch (AuthenticationException e) {
 
@@ -93,9 +96,20 @@ public class UserControler {
 		}
 
 	}
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(jakarta.servlet.http.HttpServletRequest request) {
+
+		SecurityContextHolder.clearContext();// xoa tat ca thong tin nguoi dung khoi phien hien tai
+
+		return ResponseEntity.ok().build();
+	}
 
 	@GetMapping("/hello")
 	public String hello() {
+		return "hello";
+	}
+	@PostMapping("/hello")
+	public String hello1() {
 		return "hello";
 	}
 }

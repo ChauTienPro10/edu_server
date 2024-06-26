@@ -46,10 +46,12 @@ public class WebSecurityConfig {
 			configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
 			return configuration;
 		}).and()
-		.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-				.ignoringRequestMatchers("/user/login","/user/newStudent"))
-				.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/user/hello").hasRole("USER")
-						.requestMatchers("/user/login","/user/newStudent").permitAll().anyRequest().permitAll())
+		.csrf().disable()
+//		.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//				.ignoringRequestMatchers("/user/login","/user/newStudent"))
+				.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/user/login", "/user/newStudent","/teacher/**"
+						,"/course/**").permitAll()
+					    .anyRequest().hasRole("USER"))
 
 				.formLogin().disable().httpBasic().disable();
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
